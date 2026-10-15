@@ -48,8 +48,7 @@ class DemoSeed extends Command
 
         if ($this->option('fresh')) {
             $reviews->repository()->all()->each(fn (Review $review) => $reviews->delete($review));
-            Order::all()->each->delete();
-            Cart::all()->each->delete();
+            // The orders stay: Jo's and Ada's are made once, below.
         }
 
         mt_srand(1994);
@@ -57,13 +56,25 @@ class DemoSeed extends Command
         $books = Entry::query()->where('collection', 'products')->orderBy('title')->get();
         $jo = User::findByEmail('jo@example.com');
 
+        // The demo's orders shouldn't use up the shop's stock: note it, to
+        // put back once they're made.
+        $stock = $books->mapWithKeys(fn ($book) => [$book->id() => [$book->get('stock'), $book->get('product_variants')]]);
+
         // Jo bought two books, a month ago (ones in stock).
         $inStock = $books->filter(fn ($book) => $this->lineItem($book) !== null)->values();
         $bought = $inStock->take(2);
-        $order = $this->order(30, $jo ?? ['name' => 'Jo Reader', 'email' => 'jo@example.com'], $bought->map(fn ($b) => $this->lineItem($b))->all());
+        $order = $this->existingOrder('jo@example.com') ?? $this->order(30, $jo ?? ['name' => 'Jo Reader', 'email' => 'jo@example.com'], $bought->map(fn ($b) => $this->lineItem($b))->all());
 
         // Some guests bought books too.
-        $ada = $this->order(21, ['name' => 'Ada Lovelace', 'email' => 'ada@example.com'], [$this->lineItem($inStock[2])]);
+        $ada = $this->existingOrder('ada@example.com') ?? $this->order(21, ['name' => 'Ada Lovelace', 'email' => 'ada@example.com'], [$this->lineItem($inStock[2])]);
+
+        foreach ($books as $book) {
+            [$level, $variants] = $stock[$book->id()];
+            $fresh = Entry::find($book->id());
+            $level === null ? $fresh->remove('stock') : $fresh->set('stock', $level);
+            $variants === null ? $fresh->remove('product_variants') : $fresh->set('product_variants', $variants);
+            $fresh->saveQuietly();
+        }
 
         $people = ['Ada Lovelace', 'Grace Hopper', 'Alan Turing', 'Katherine Johnson', 'Mary Somerville', 'Hedy Lamarr', 'Tim Berners-Lee', 'Radia Perlman', 'Joan Clarke', 'Dorothy Vaughan', 'Annie Easley', 'Karen Spärck Jones', 'Margaret Hamilton', 'Charles Babbage'];
 
@@ -111,6 +122,16 @@ class DemoSeed extends Command
         foreach ($first as $review) {
             $reviews->reply($review, 'Sorry to hear that. Thank you for being honest: we’ve passed this on, and if your copy arrived damaged, reply to your order email and we’ll send another.', User::findByEmail('admin@example.com'));
         }
+
+        // Jo's verified review of a book they bought, which readers found helpful.
+        $jo_review = $this->review($bought[0], 5, 'Read it on the move, then again at home', "Forty chapters, each the length of a bus ride. I bought the hardback and it's beautifully made.\n\nThe chapter about leaving a flat for the last time had me in tears.", 'Jo Reader', daysAgo: 18, email: 'jo@example.com', order: $order->id());
+        $jo_review->user = $jo?->id();
+        $reviews->approve($jo_review);
+        $jo_review->voters = array_map(fn ($v) => 'seed-jo-'.$v, range(1, 23));
+        $jo_review->helpful = 23;
+        $reviews->repository()->save($jo_review);
+        $reviews->reply($jo_review, 'Thank you, Jo. We cried at that chapter too.', User::findByEmail('admin@example.com'));
+        $made++;
 
         // Ada's verified review of the book she bought.
         $ada_review = $this->review($inStock[2], 5, 'Bought it for the cover, stayed for the story', 'Lovely edition, and the story lives up to it.', 'Ada Lovelace', daysAgo: 10, email: 'ada@example.com', order: $ada->id());
@@ -192,6 +213,14 @@ class DemoSeed extends Command
 
             return $order;
         });
+    }
+
+    /**
+     * The demo order already made for a customer, if any.
+     */
+    protected function existingOrder(string $email): ?\DuncanMcClean\Cargo\Contracts\Orders\Order
+    {
+        return Order::query()->get()->first(fn ($order) => $order->customer()?->email() === $email);
     }
 
     protected function at(int|float $daysAgo, \Closure $callback): mixed
