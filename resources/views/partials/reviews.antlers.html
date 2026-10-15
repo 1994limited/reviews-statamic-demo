@@ -135,7 +135,7 @@
                         </div>
                     {{ /if }}
 
-                    <label>Headline <span class="meta">(optional)</span>
+                    <label><span>Headline <span class="meta">(optional)</span></span>
                         <input name="title" value="{{ old:title }}" maxlength="{{ title_limit }}" placeholder="Sum it up in a few words">
                     </label>
                     <label>Your review
@@ -144,8 +144,8 @@
 
                     {{ if needs_name }}
                         <div class="two">
-                            <label>Your name <input name="name" value="{{ old:name }}" maxlength="{{ name_limit }}" autocomplete="name" required></label>
-                            <label>Your email <span class="meta">(never shown)</span> <input type="email" name="email" value="{{ old:email }}" autocomplete="email" required></label>
+                            <label><span>Your name</span> <input name="name" value="{{ old:name }}" maxlength="{{ name_limit }}" autocomplete="name" required></label>
+                            <label><span>Your email <span class="meta">(never shown)</span></span> <input type="email" name="email" value="{{ old:email }}" autocomplete="email" required></label>
                         </div>
                     {{ /if }}
 
@@ -157,7 +157,7 @@
                                 {{ /existing_photos }}
                             </div>
                         {{ /if }}
-                        <label>Photos <span class="meta">(optional, up to {{ max_photos }})</span>
+                        <label><span>Photos <span class="meta">(optional, up to {{ max_photos }})</span></span>
                             <input type="file" name="photos[]" accept="image/jpeg,image/png,image/webp" multiple>
                         </label>
                     {{ /if }}
