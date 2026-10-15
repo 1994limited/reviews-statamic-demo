@@ -4,19 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d867af074a5f5348a1390901c6e536cf",
+    "content-hash": "a7c37277e2a7cb268d2f2d971c77946a",
     "packages": [
         {
             "name": "1994/reviews-statamic",
-            "version": "dev-master",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/1994limited/reviews-statamic.git",
+                "reference": "bf9076cbad8b02a6e423116e8b823cfcc0bd76aa"
+            },
             "dist": {
-                "type": "path",
-                "url": "../reviews-statamic",
-                "reference": "790ca2ee7d54ae2a814da79d6c7f3647be2b575d"
+                "type": "zip",
+                "url": "https://api.github.com/repos/1994limited/reviews-statamic/zipball/bf9076cbad8b02a6e423116e8b823cfcc0bd76aa",
+                "reference": "bf9076cbad8b02a6e423116e8b823cfcc0bd76aa",
+                "shasum": ""
             },
             "require": {
                 "php": "^8.3",
-                "statamic/cms": "^6.0"
+                "statamic/cms": "^6.35"
             },
             "conflict": {
                 "duncanmcclean/statamic-cargo": "<1.15"
@@ -30,6 +36,7 @@
             "suggest": {
                 "duncanmcclean/statamic-cargo": "Verified purchase badges, reviews from buyers only, and emails asking customers for a review (Cargo ^1.15)."
             },
+            "default-branch": true,
             "type": "statamic-addon",
             "extra": {
                 "statamic": {
@@ -75,11 +82,11 @@
                 "testimonials"
             ],
             "support": {
-                "email": "hello@1994.co.uk"
+                "email": "hello@1994.co.uk",
+                "source": "https://github.com/1994limited/reviews-statamic/tree/main",
+                "issues": "https://github.com/1994limited/reviews-statamic/issues"
             },
-            "transport-options": {
-                "relative": true
-            }
+            "time": "2026-10-15T21:31:21+00:00"
         },
         {
             "name": "ajthinking/archetype",

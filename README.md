@@ -1,29 +1,27 @@
-# Dog-ear Books with Cargo: a Wishlist demo
+# Dog-ear Books: a Reviews demo
 
-The [Dog-ear Books](https://github.com/1994limited/wishlist-statamic-demo) demo, with the books for sale. It runs [Wishlist for Statamic](https://github.com/1994limited/wishlist-statamic) alongside [Cargo](https://builtwithcargo.dev), so you can see how the two work together, and copy from it.
+A made-up bookshop built with [Reviews for Statamic](https://github.com/1994limited/reviews-statamic) and [Cargo](https://builtwithcargo.dev), using only the tags in Reviews' docs, so you can see it working and copy from it.
 
-It shows everything the plain demo does (saving with a ribbon, notes, several lists, sharing, guests and accounts), plus:
+- **Ratings on the shelf.** Each book's average and number of reviews, under its cover.
+- **A book's reviews.** The average, how many of each star (each a link to just those reviews), and averages for two criteria, Story and Writing. Reviews sorted by most helpful (or newest, highest, lowest), five to a page, with photos, the shop's replies and verified purchase badges.
+- **The form.** Star rating, criteria, headline, review, photos. Guests give a name and email; signed-in readers can change their review. Works without JavaScript.
+- **"Was this helpful?"**, one vote each.
+- **Review schema** on every book page, for star ratings in search results.
+- **The Control Panel** at `/cp`: Content → Reviews, with reviews waiting, one rejected and one spam, to try moderating.
+- **Verified purchases.** Jo bought two books, so their reviews of those say "Verified purchase".
 
-- **Editions.** Four books come in Hardback and Paperback (Cargo variants). The book page has one edition choice for both the basket and the list, and each edition is saved as its own item.
-- **Prices and stock on the list.** Each saved book shows its price, its edition, and "Sold out" when it is.
-- **Price drops.** Wishlist keeps the price a book had when it was saved. Lower a price in the Control Panel and the list says "Down £2.00 since you saved it".
-- **Add to basket**, for one book, or the whole list at once with `{{ wishlist:add_to_cart }}`. Sold-out books, and books saved from the shelf without choosing an edition, stay on the list.
-- **Buying from a shared list.** Whoever opens a share link can put the books straight into their own basket, in the edition that was saved.
-- **Cargo's checkout**, with free shipping and Cargo's dummy payment gateway, so nothing is charged.
-
-The book covers are drawn in CSS: there are no image files, and every title and author is invented.
+The book covers are drawn in CSS: there are no image files, and every title, author and reviewer is invented.
 
 ## Running it
 
-You need PHP 8.3+, Composer, and a local web server such as [Herd](https://herd.laravel.com) or `php artisan serve`.
+You need PHP 8.3+ with GD, Composer and Node. Then:
 
 ```bash
-git clone https://github.com/1994limited/wishlist-cargo-demo.git
-cd wishlist-cargo-demo
-composer install
-cp .env.example .env
-php artisan key:generate
+git clone https://github.com/1994limited/reviews-statamic-demo.git
+cd reviews-statamic-demo
+composer setup
 php artisan demo:users
+php artisan demo:seed
 php artisan serve
 ```
 
@@ -33,45 +31,24 @@ Then open http://localhost:8000.
 
 | Account | For |
 | --- | --- |
-| `jo@example.com` | Shopping: the sign-in page is filled in with it |
-| `admin@example.com` | The Control Panel, at `/cp`, where the books' prices, editions and stock are |
+| `jo@example.com` | A reader who has bought two books. The sign-in page is filled in with it. |
+| `admin@example.com` | The Control Panel, at `/cp`. |
 
-It only runs with `APP_ENV=local`. Don't put this demo on a public server as it is: the sign-in page gives the password away.
+`demo:seed` writes about 70 reviews and a few orders. Run it again with `--fresh` to start over.
 
-Wishlist and Cargo are commercial addons. Running them locally like this needs no licence. The demo turns on Statamic Pro (`STATAMIC_PRO_ENABLED=true`), which Cargo needs, and which runs in Statamic's trial mode locally.
+Both only run with `APP_ENV=local`. Don't put this demo on a public server as it is: the sign-in page gives the password away.
+
+Reviews and Cargo are commercial addons. Running them locally like this needs no licence. The demo turns on Statamic Pro (`STATAMIC_PRO_ENABLED=true`), which Cargo needs, and which runs in Statamic's trial mode locally.
 
 ## Things to try
 
-1. Open **Coral Arithmetic**. The hardback is sold out, so the paperback is chosen. Save it, then add it to the basket.
-2. Tap the ribbon on **A Field Guide to Leaving** on the shelves. It's saved without an edition, so the list asks you to choose one.
-3. Save **The Lantern Ledger**, which is sold out. The list says so, and leaves it out of "Add this list to my basket".
-4. Lower a saved book's price in the Control Panel, then look at your list.
-5. Copy your list's share link, open it in a private window, and add a book to that basket.
+1. Open **A Field Guide to Leaving** and sort its reviews by lowest rating, or click "2 stars" in the breakdown.
+2. Write a review as a guest. It waits for an editor: sign in to `/cp` as the admin and approve it, then reply to it.
+3. Sign in as Jo and review **Coral Arithmetic**, which Jo bought: it's marked as a verified purchase.
+4. Change the settings in **Tools → Addons → Reviews → Settings**: publish signed-in reviews straight away, turn photos off, or allow only buyers to review.
 
-## Where to look
+The review templates are in `resources/views/products/show.antlers.html` and `resources/views/partials/reviews.antlers.html`; the styles in `public/css/dogear.css`.
 
-| File | What it shows |
-| --- | --- |
-| `resources/views/products/show.antlers.html` | Cargo's `{{ cart:add }}` with an edition choice, and `{{ wishlist:add }}` saving the same edition |
-| `resources/views/partials/saved.antlers.html` | Each saved book's `{{ cargo:* }}` values: price, edition, stock, price drop, and a per-book "Add to basket" |
-| `resources/views/wishlist.antlers.html` | `{{ wishlist:add_to_cart }}`, the whole list to the basket |
-| `resources/views/wishlist/shared.antlers.html` | Buying from a shared list |
-| `resources/views/partials/price.antlers.html` | A book's price, or each edition's |
-| `resources/views/layout.antlers.html` | The basket count beside the saved count |
-| `resources/blueprints/collections/products/product.yaml` | The book blueprint: price, stock and editions (Cargo's `money` and `product_variants` fields) |
-| `resources/views/checkout/` | Cargo's prebuilt checkout, published |
+## Screenshots
 
-Wishlist's [Cargo docs](https://github.com/1994limited/wishlist-statamic/blob/main/docs/cargo.md) explain each of these.
-
-## Trying the drivers
-
-Lists are kept in flat files (`storage/wishlists`) by default. To try the others, change `WISHLIST_DRIVER` in `.env`:
-
-- `database`: then run `php artisan migrate`.
-- `browser`: lists live only in your browser's localStorage, and share links carry the items. "Add this list to my basket" still works: the form sends the list along.
-
-Nothing in the templates changes between drivers.
-
-## Licence
-
-The demo's own code (templates, styles, content) is MIT licensed: copy whatever helps. Wishlist and Cargo are commercial software: see [Wishlist's licence](https://github.com/1994limited/wishlist-statamic/blob/main/LICENSE.md) and [Cargo's](https://builtwithcargo.dev).
+`scripts/screenshots.mjs` takes the screenshots in Reviews' docs, with Playwright and Chrome: `cd scripts && npm install && npm run screenshots` (see the script for its options).

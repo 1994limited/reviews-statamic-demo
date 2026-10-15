@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "1994/reviews-sandbox",
+    "name": "1994/reviews-statamic-demo",
     "type": "project",
-    "description": "Dog-ear Books with reviews: a local sandbox for the Reviews addon for Statamic, with Cargo.",
+    "description": "Dog-ear Books: a demo of the Reviews addon for Statamic, in a bookshop built with Cargo.",
     "keywords": [
         "statamic",
         "cms",
@@ -15,7 +15,7 @@
         "laravel/tinker": "^3.0",
         "statamic/cms": "^6.0",
         "duncanmcclean/statamic-cargo": "^1.15",
-        "1994/reviews-statamic": "@dev"
+        "1994/reviews-statamic": "dev-main"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -99,9 +99,8 @@
     "license": "MIT",
     "repositories": [
         {
-            "name": "reviews",
-            "type": "path",
-            "url": "../reviews-statamic"
+            "type": "vcs",
+            "url": "https://github.com/1994limited/reviews-statamic"
         }
     ]
 }
