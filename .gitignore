@@ -37,11 +37,5 @@ Thumbs.db
 /storage/reviews-requests.json
 /content/cargo/orders
 /content/cargo/carts
-/storage/framework/cache/*
-/storage/framework/sessions/*
-/storage/framework/views/*
-/storage/logs/*
-/storage/statamic/*
-/storage/app/*
 /storage/inertia-devtools
 /database/database.sqlite
