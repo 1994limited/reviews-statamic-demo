@@ -1,0 +1,23 @@
+collections:
+  - products
+who: anyone
+auto_approve: never
+name_display: short
+criteria:
+  -
+    label: Story
+    handle: story
+  -
+    label: Writing
+    handle: writing
+photos_enabled: true
+photos_max: 4
+photos_container: assets
+notify_to:
+  - editor@example.com
+notify_approved: true
+notify_replied: true
+buyers_only: false
+requests_enabled: true
+requests_delay_days: 14
+requests_status: shipped

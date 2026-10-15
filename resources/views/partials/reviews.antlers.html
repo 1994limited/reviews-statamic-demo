@@ -1,0 +1,171 @@
+{{#
+    Reviews on a book's page: the numbers, the reviews themselves (sorted
+    by the visitor's choice), and the form. The form and anything personal
+    are in {{ nocache }}, so the page can be statically cached.
+#}}
+<section class="reviews" id="reviews" aria-labelledby="reviews-heading">
+    <h2 id="reviews-heading">Readers’ reviews</h2>
+
+    <div class="reviews__layout">
+        <aside class="reviews__summary">
+            {{ reviews:summary }}
+                {{ if has_reviews }}
+                    <p class="reviews__average"><span class="reviews__number">{{ average }}</span> out of 5</p>
+                    {{ partial:stars }}
+                    <p class="meta">From {{ count }} {{ count == 1 ? 'review' : 'reviews' }}</p>
+                    <ul class="bars">
+                        {{ breakdown }}
+                            <li>
+                                <a href="?rating={{ rating }}#reviews-list">{{ rating }} star{{ rating != 1 ? 's' : '' }}</a>
+                                <span class="bar"><span style="width: {{ percent }}%"></span></span>
+                                <span class="meta">{{ total }}</span>
+                            </li>
+                        {{ /breakdown }}
+                    </ul>
+                    {{ if criteria }}
+                        <dl class="criteria">
+                            {{ criteria }}
+                                {{ if average }}<div><dt>{{ label }}</dt><dd>{{ average }}</dd></div>{{ /if }}
+                            {{ /criteria }}
+                        </dl>
+                    {{ /if }}
+                {{ else }}
+                    <p class="meta">No reviews yet. Be the first.</p>
+                {{ /if }}
+            {{ /reviews:summary }}
+            <a class="button button--quiet" href="#write">Write a review</a>
+        </aside>
+
+        <div class="reviews__list" id="reviews-list">
+            <form class="reviews__sort" method="get" action="#reviews-list">
+                <label>Sort
+                    <select name="sort" onchange="this.form.submit()">
+                        <option value="helpful" {{ if get:sort == 'helpful' or !get:sort }}selected{{ /if }}>Most helpful</option>
+                        <option value="newest" {{ if get:sort == 'newest' }}selected{{ /if }}>Newest</option>
+                        <option value="highest" {{ if get:sort == 'highest' }}selected{{ /if }}>Highest rated</option>
+                        <option value="lowest" {{ if get:sort == 'lowest' }}selected{{ /if }}>Lowest rated</option>
+                    </select>
+                </label>
+                {{ if get:rating }}<input type="hidden" name="rating" value="{{ get:rating | sanitize }}"><a class="link-button" href="?#reviews-list">Showing {{ get:rating | sanitize }}-star reviews · show all</a>{{ /if }}
+                <noscript><button class="button button--small">Sort</button></noscript>
+            </form>
+
+            {{ nocache }}{{ if {reviews:success} }}<p class="flash" role="status">{{ reviews:success }}</p>{{ /if }}{{ /nocache }}
+
+            {{ reviews sort="{ get:sort ?? 'helpful' }" rating="{ get:rating }" paginate="5" as="items" }}
+                {{ items }}
+                    <article class="review" id="review-{{ id }}">
+                        <header>
+                            {{ partial:stars }}
+                            {{ if title }}<h3>{{ title }}</h3>{{ /if }}
+                        </header>
+                        {{ if ratings }}
+                            <p class="review__criteria">{{ ratings }}<span>{{ label }} {{ rating }}/5</span>{{ /ratings }}</p>
+                        {{ /if }}
+                        {{ if body }}<p>{{ body }}</p>{{ /if }}
+                        {{ if photos }}
+                            <div class="review__photos">{{ photos }}<a href="{{ url }}"><img src="{{ url }}" alt="{{ alt }}" loading="lazy"></a>{{ /photos }}</div>
+                        {{ /if }}
+                        <p class="review__by">
+                            <strong>{{ name }}</strong> · {{ date format="j F Y" }}
+                            {{ if verified }}<span class="verified">✓ Verified purchase</span>{{ /if }}
+                        </p>
+                        {{ if has_reply }}
+                            <blockquote class="review__reply"><strong>Dog-ear Books replied</strong>{{ reply }}</blockquote>
+                        {{ /if }}
+                        <div class="review__actions">
+                            {{ reviews:helpful redirect="{{ url }}#review-{{ id }}" }}
+                                <button class="link-button">Helpful{{ if helpful }} ({{ helpful }}){{ /if }}</button>
+                            {{ /reviews:helpful }}
+                        </div>
+                    </article>
+                {{ /items }}
+
+                {{ if no_results }}<p class="meta">{{ get:rating ? 'No reviews with that rating yet.' : 'No reviews yet.' }}</p>{{ /if }}
+
+                {{ paginate }}
+                    {{ if total_pages > 1 }}
+                        <nav class="pages" aria-label="Review pages">
+                            {{ if prev_page }}<a href="{{ prev_page }}#reviews-list">← Previous</a>{{ /if }}
+                            <span class="meta">Page {{ current_page }} of {{ total_pages }}</span>
+                            {{ if next_page }}<a href="{{ next_page }}#reviews-list">Next →</a>{{ /if }}
+                        </nav>
+                    {{ /if }}
+                {{ /paginate }}
+            {{ /reviews }}
+        </div>
+    </div>
+
+    <div class="write" id="write">
+        {{ nocache }}
+            {{ reviews:form class="review-form" redirect="{{ url }}#reviews" error_redirect="{{ url }}#write" }}
+                <h2>{{ editing ? 'Your review' : 'Write a review' }}</h2>
+                {{ if success }}<p class="flash" role="status">{{ success }}</p>{{ /if }}
+
+                {{ if reason }}
+                    <p>{{ reason_message }}{{ if reason == 'sign_in' }} <a href="/login">Sign in</a>{{ /if }}</p>
+                {{ else }}
+                    {{ if editing }}
+                        <p class="meta">{{ review:pending ? 'Your review is waiting to be checked.' : 'Your review is live. Changing it sends it back to be checked.' }}</p>
+                    {{ /if }}
+                    {{ if has_errors }}
+                        <ul class="flash" role="alert">{{ error_list }}<li>{{ value }}</li>{{ /error_list }}</ul>
+                    {{ /if }}
+
+                    <fieldset class="star-input">
+                        <legend>Your rating</legend>
+                        <div class="star-input__stars">
+                            {{ loop from="5" to="1" }}
+                                <input type="radio" id="rating-{{ value }}" name="rating" value="{{ value }}" required {{ if old:rating == value }}checked{{ /if }}>
+                                <label for="rating-{{ value }}" title="{{ value }} {{ value == 1 ? 'star' : 'stars' }}">★<span class="sr-only">{{ value }} {{ value == 1 ? 'star' : 'stars' }}</span></label>
+                            {{ /loop }}
+                        </div>
+                    </fieldset>
+
+                    {{ if criteria }}
+                        <div class="criteria-input">
+                            {{ criteria }}
+                                <label>{{ label }}
+                                    <select name="{{ name }}">
+                                        <option value="">Rate {{ label | lower }} (optional)</option>
+                                        {{ loop from="5" to="1" }}<option value="{{ value }}" {{ if old == value }}selected{{ /if }}>{{ value }} out of 5</option>{{ /loop }}
+                                    </select>
+                                </label>
+                            {{ /criteria }}
+                        </div>
+                    {{ /if }}
+
+                    <label>Headline <span class="meta">(optional)</span>
+                        <input name="title" value="{{ old:title }}" maxlength="{{ title_limit }}" placeholder="Sum it up in a few words">
+                    </label>
+                    <label>Your review
+                        <textarea name="body" rows="6" maxlength="{{ body_limit }}" required>{{ old:body }}</textarea>
+                    </label>
+
+                    {{ if needs_name }}
+                        <div class="two">
+                            <label>Your name <input name="name" value="{{ old:name }}" maxlength="{{ name_limit }}" autocomplete="name" required></label>
+                            <label>Your email <span class="meta">(never shown)</span> <input type="email" name="email" value="{{ old:email }}" autocomplete="email" required></label>
+                        </div>
+                    {{ /if }}
+
+                    {{ if photos_enabled }}
+                        {{ if existing_photos }}
+                            <div class="review__photos">
+                                {{ existing_photos }}
+                                    <label class="photo-keep">{{ if url }}<img src="{{ url }}" alt="">{{ else }}<span class="meta">Waiting to be checked</span>{{ /if }}<span><input type="checkbox" name="remove_photos[]" value="{{ index }}"> Remove</span></label>
+                                {{ /existing_photos }}
+                            </div>
+                        {{ /if }}
+                        <label>Photos <span class="meta">(optional, up to {{ max_photos }})</span>
+                            <input type="file" name="photos[]" accept="image/jpeg,image/png,image/webp" multiple>
+                        </label>
+                    {{ /if }}
+
+                    <p class="meta">Reviews are checked before they appear. We never hide a review for its rating.</p>
+                    <button type="submit" class="button">{{ editing ? 'Update your review' : 'Send your review' }}</button>
+                {{ /if }}
+            {{ /reviews:form }}
+        {{ /nocache }}
+    </div>
+</section>
