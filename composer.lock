@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/1994limited/reviews-statamic.git",
-                "reference": "bf9076cbad8b02a6e423116e8b823cfcc0bd76aa"
+                "reference": "f63211384bb9a7d302135124acc3cf24c58f2663"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/1994limited/reviews-statamic/zipball/bf9076cbad8b02a6e423116e8b823cfcc0bd76aa",
-                "reference": "bf9076cbad8b02a6e423116e8b823cfcc0bd76aa",
+                "url": "https://api.github.com/repos/1994limited/reviews-statamic/zipball/f63211384bb9a7d302135124acc3cf24c58f2663",
+                "reference": "f63211384bb9a7d302135124acc3cf24c58f2663",
                 "shasum": ""
             },
             "require": {
@@ -86,7 +86,7 @@
                 "source": "https://github.com/1994limited/reviews-statamic/tree/main",
                 "issues": "https://github.com/1994limited/reviews-statamic/issues"
             },
-            "time": "2026-10-15T21:31:21+00:00"
+            "time": "2026-10-15T22:05:21+00:00"
         },
         {
             "name": "ajthinking/archetype",
