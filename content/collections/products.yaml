@@ -3,3 +3,13 @@ template: products/show
 revisions: false
 entry_class: DuncanMcClean\Cargo\Products\Product
 route: '/products/{slug}'
+inject:
+  seo:
+    json_ld_schema: |-
+      {
+          {{ reviews:schema_data format="properties" }}
+          "@context": "https://schema.org",
+          "@type": "Book",
+          "name": "{{ title }}",
+          "url": "{{ permalink }}"
+      }

@@ -68,10 +68,10 @@ return [
     |
     */
 
-    // 'allowedContentTags' => [
-    //     '@default',
-    //     'foo:*',
-    // ],
+    'allowedContentTags' => [
+        '@default',
+        'reviews:schema_data*',
+    ],
 
     // 'allowedContentModifiers' => [
     //     '@default',

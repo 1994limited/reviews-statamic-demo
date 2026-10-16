@@ -47,6 +47,32 @@ await page.fill('input[name=name]', 'Sam Reader');
 await page.fill('input[name=email]', 'sam@example.com');
 await form.screenshot({ path: `${out}/form.png` });
 
+// The ready-made views and default styles ({{ reviews:display }}), on the
+// shop's own fonts and colours, and on a dark page.
+const ready = await shop.newPage();
+await ready.goto(`${base}/ready-made`);
+await settle(ready);
+const section = async () => {
+    const box = await ready.locator('#reviews').boundingBox();
+    const columns = await ready.locator('#reviews .reviews-ui__columns').boundingBox();
+    return { x: box.x - 40, y: box.y - 32, width: box.width + 80, height: columns.y + columns.height - box.y + 64 };
+};
+await ready.screenshot({ path: `${out}/ready-made.png`, fullPage: true, clip: await section() });
+await ready.addStyleTag({ content: 'body,.masthead{background:#15171c!important;color:#e9e6df!important} .masthead a,.wordmark{color:inherit!important}' });
+await settle(ready);
+await ready.screenshot({ path: `${out}/ready-made-dark.png`, fullPage: true, clip: await section() });
+
+const readyForm = await shop.newPage();
+await readyForm.goto(`${base}/ready-made`);
+await settle(readyForm);
+await readyForm.click('label[for=reviews-rating-4]');
+await readyForm.fill('#write-a-review input[name=title]', 'A book to keep');
+await readyForm.fill('#write-a-review textarea[name=body]', 'Short chapters, perfect for the commute. I read the last one twice.');
+await readyForm.fill('#write-a-review input[name=name]', 'Sam Reader');
+await readyForm.fill('#write-a-review input[name=email]', 'sam@example.com');
+await readyForm.locator('#write-a-review input[name=email]').evaluate((el) => el.blur());
+await readyForm.locator('.reviews-ui__form').screenshot({ path: `${out}/ready-made-form.png` });
+
 // The Control Panel, as the demo admin.
 const cp = await browser.newContext(desktop);
 const admin = await cp.newPage();

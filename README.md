@@ -9,6 +9,8 @@ A made-up bookshop built with [Reviews for Statamic](https://github.com/1994limi
 - **Review schema** on every book page, for star ratings in search results.
 - **The Control Panel** at `/cp`: Content → Reviews, with reviews waiting, one rejected and one spam, to try moderating.
 - **Verified purchases.** Jo bought two books, so their reviews of those say "Verified purchase".
+- **Ready-made reviews.** `/ready-made` is the same book's reviews with `{{ reviews:display }}` and the default styles instead of the shop's own templates: two tags, taking the shop's fonts and colours.
+- **SEO Pro.** The book pages' JSON-LD comes from [SEO Pro](https://statamic.com/addons/statamic/seo-pro), with the rating and latest reviews added by `{{ reviews:schema_data }}` in the products' section defaults (Tools → SEO Pro → Section Defaults → Products).
 
 The book covers are drawn in CSS: there are no image files, and every title, author and reviewer is invented.
 
@@ -38,7 +40,7 @@ Then open http://localhost:8000.
 
 Both only run with `APP_ENV=local`. Don't put this demo on a public server as it is: the sign-in page gives the password away.
 
-Reviews and Cargo are commercial addons. Running them locally like this needs no licence. The demo turns on Statamic Pro (`STATAMIC_PRO_ENABLED=true`), which Cargo needs, and which runs in Statamic's trial mode locally.
+Reviews, Cargo and SEO Pro are commercial addons. Running them locally like this needs no licence. The demo turns on Statamic Pro (`STATAMIC_PRO_ENABLED=true`), which Cargo needs, and which runs in Statamic's trial mode locally.
 
 ## Things to try
 
@@ -47,7 +49,7 @@ Reviews and Cargo are commercial addons. Running them locally like this needs no
 3. Sign in as Jo and review **Coral Arithmetic**, which Jo bought: it's marked as a verified purchase.
 4. Change the settings in **Tools → Addons → Reviews → Settings**: publish signed-in reviews straight away, turn photos off, or allow only buyers to review.
 
-The review templates are in `resources/views/products/show.antlers.html` and `resources/views/partials/reviews.antlers.html`; the styles in `public/css/dogear.css`.
+The review templates are in `resources/views/products/show.antlers.html` and `resources/views/partials/reviews.antlers.html`; the styles in `public/css/dogear.css`. The ready-made version is `resources/views/ready-made.antlers.html`.
 
 ## Screenshots
 

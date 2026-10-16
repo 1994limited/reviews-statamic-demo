@@ -12,3 +12,6 @@ Route::statamic('checkout', 'checkout.index', ['title' => 'Checkout', 'layout' =
 Route::statamic('checkout/confirmation', 'checkout.confirmation', ['title' => 'Order Confirmation', 'layout' => 'checkout.layout'])
     ->name('checkout.confirmation')
     ->middleware('signed');
+
+// The ready-made views and default styles, on a book's page-like layout.
+Route::statamic('ready-made', 'ready-made', ['title' => 'Ready-made reviews']);

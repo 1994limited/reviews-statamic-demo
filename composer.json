@@ -15,7 +15,8 @@
         "laravel/tinker": "^3.0",
         "statamic/cms": "^6.0",
         "duncanmcclean/statamic-cargo": "^1.15",
-        "1994/reviews-statamic": "dev-main"
+        "1994/reviews-statamic": "^1.1",
+        "statamic/seo-pro": "^7.15"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -96,11 +97,5 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "license": "MIT",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/1994limited/reviews-statamic"
-        }
-    ]
+    "license": "MIT"
 }
