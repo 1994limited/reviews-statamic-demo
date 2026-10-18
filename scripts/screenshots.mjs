@@ -73,6 +73,11 @@ await readyForm.fill('#write-a-review input[name=email]', 'sam@example.com');
 await readyForm.locator('#write-a-review input[name=email]').evaluate((el) => el.blur());
 await readyForm.locator('.reviews-ui__form').screenshot({ path: `${out}/ready-made-form.png` });
 
+// A review imported from Trustpilot, showing where it came from.
+await page.goto(`${base}/products/coral-arithmetic?sort=newest`);
+await settle(page);
+await page.locator('article', { hasText: 'From Trustpilot' }).first().screenshot({ path: `${out}/imported.png` });
+
 // The Control Panel, as the demo admin.
 const cp = await browser.newContext(desktop);
 const admin = await cp.newPage();
@@ -90,6 +95,20 @@ await settle(admin);
 if (await snooze.isVisible().catch(() => false)) await snooze.click();
 await settle(admin);
 await admin.screenshot({ path: `${out}/cp-reviews.png` });
+
+// Import: an export uploaded and previewed (scripts/sample-export.csv).
+await admin.goto(`${base}/cp/reviews/import`);
+await settle(admin);
+await admin.setInputFiles('input[type=file]', new URL('./sample-export.csv', import.meta.url).pathname);
+await admin.getByRole('button', { name: 'Preview' }).click();
+await admin.getByText('would be added').waitFor();
+await settle(admin);
+await admin.screenshot({ path: `${out}/cp-import.png` });
+
+// Sync: the sources reviews are synced from.
+await admin.goto(`${base}/cp/reviews/sync`);
+await settle(admin);
+await admin.screenshot({ path: `${out}/cp-sync.png` });
 
 if (process.env.REVIEW) {
     await admin.goto(`${base}/cp/reviews/${process.env.REVIEW}`);

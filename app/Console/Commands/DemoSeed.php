@@ -7,7 +7,13 @@ use DuncanMcClean\Cargo\Facades\Order;
 use DuncanMcClean\Cargo\Facades\PaymentGateway;
 use DuncanMcClean\Cargo\Orders\Actions\CreateOrderFromCart;
 use DuncanMcClean\Cargo\Orders\OrderStatus;
+use DateTimeImmutable;
 use Illuminate\Console\Command;
+use NineteenNinetyFour\Reviews\Core\Import\ImportedReview;
+use NineteenNinetyFour\Reviews\Import\ImportOptions;
+use NineteenNinetyFour\Reviews\Import\Imports;
+use NineteenNinetyFour\Reviews\Sync\Source;
+use NineteenNinetyFour\Reviews\Sync\Sync;
 use Illuminate\Support\Carbon;
 use NineteenNinetyFour\Reviews\Review;
 use NineteenNinetyFour\Reviews\ReviewQuery;
@@ -148,10 +154,38 @@ class DemoSeed extends Command
         $reviews->spam($spam);
         $made += 5;
 
+        $made += $this->elsewhere($books[1]);
+
         $this->components->info(sprintf('Made %d reviews of %d books, and %d orders.', $made, $books->count(), Order::query()->count()));
         $this->line('  Jo (jo@example.com / password) bought "'.$bought->pluck('title')->join('" and "').'", so their reviews of those are verified.');
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Reviews from elsewhere: two Trustpilot reviews, imported as an export
+     * would be (they show "From Trustpilot", and don't count towards the
+     * average), and a Feefo sync source, switched off so the demo never
+     * calls Feefo.
+     */
+    protected function elsewhere($book): int
+    {
+        $handle = (string) $book->slug();
+
+        $imported = [
+            new ImportedReview(source: 'trustpilot', sourceId: 'demo-tp-1', product: ['handle' => $handle], rating: 5, title: 'Arrived beautifully wrapped', body: "Ordered for my dad's birthday. It came in two days, wrapped in brown paper and string.", name: 'Priya Shah', date: new DateTimeImmutable('-2 days'), url: 'https://uk.trustpilot.com/reviews/demo-tp-1'),
+            new ImportedReview(source: 'trustpilot', sourceId: 'demo-tp-2', product: ['handle' => $handle], rating: 4, title: 'Lovely shop', body: 'Good choice of books, and a handwritten note in the parcel.', name: 'Tom Ellery', date: new DateTimeImmutable('-3 days'), url: 'https://uk.trustpilot.com/reviews/demo-tp-2'),
+        ];
+
+        $report = app(Imports::class)->import($imported, new ImportOptions);
+
+        $sync = app(Sync::class);
+
+        if (! collect($sync->all())->contains(fn ($source) => $source->type === 'feefo')) {
+            $sync->save(Source::fromArray('', ['type' => 'feefo', 'name' => 'Feefo', 'settings' => ['merchant' => 'dog-ear-books'], 'enabled' => false]));
+        }
+
+        return $report->added;
     }
 
     protected function review($book, int $rating, ?string $title, ?string $body, string $name, int $daysAgo, ?string $email = null, ?string $order = null, array $ratings = []): Review

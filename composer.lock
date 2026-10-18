@@ -4,23 +4,85 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "86e811651446f7899944d058966fc560",
+    "content-hash": "1ec693b648fd45277818489b18d9b100",
     "packages": [
         {
-            "name": "1994/reviews-statamic",
-            "version": "v1.1.2",
+            "name": "1994/reviews-core",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/1994limited/reviews-statamic.git",
-                "reference": "45b9130686c47493540a700f6261e220a57a1ae7"
+                "url": "https://github.com/1994limited/reviews-core.git",
+                "reference": "0281620cd161f89042c5c5168b858c40e78a9c1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/1994limited/reviews-statamic/zipball/45b9130686c47493540a700f6261e220a57a1ae7",
-                "reference": "45b9130686c47493540a700f6261e220a57a1ae7",
+                "url": "https://api.github.com/repos/1994limited/reviews-core/zipball/0281620cd161f89042c5c5168b858c40e78a9c1f",
+                "reference": "0281620cd161f89042c5c5168b858c40e78a9c1f",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.18",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^11.5|^12.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "NineteenNinetyFour\\Reviews\\Core\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "1994",
+                    "email": "hello@1994.co.uk",
+                    "homepage": "https://1994.co.uk"
+                }
+            ],
+            "description": "The framework-free core shared by Reviews for Craft CMS and Statamic: averages and star breakdowns, spam checks, captchas, review schema, importing from other review platforms, syncing from them on a schedule, and the default styles.",
+            "homepage": "https://github.com/1994limited/reviews-core",
+            "keywords": [
+                "import",
+                "ratings",
+                "review schema",
+                "reviews",
+                "star rating"
+            ],
+            "support": {
+                "issues": "https://github.com/1994limited/reviews-core/issues",
+                "source": "https://github.com/1994limited/reviews-core"
+            },
+            "time": "2026-10-18T16:52:24+00:00"
+        },
+        {
+            "name": "1994/reviews-statamic",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/1994limited/reviews-statamic.git",
+                "reference": "31635d8f962da4442c84f532a462b26255c7986e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/1994limited/reviews-statamic/zipball/31635d8f962da4442c84f532a462b26255c7986e",
+                "reference": "31635d8f962da4442c84f532a462b26255c7986e",
+                "shasum": ""
+            },
+            "require": {
+                "1994/reviews-core": "^1.0",
                 "php": "^8.3",
                 "statamic/cms": "^6.35"
             },
@@ -79,9 +141,9 @@
             "support": {
                 "email": "hello@1994.co.uk",
                 "issues": "https://github.com/1994limited/reviews-statamic/issues",
-                "source": "https://github.com/1994limited/reviews-statamic/tree/v1.1.2"
+                "source": "https://github.com/1994limited/reviews-statamic/tree/v1.2.0"
             },
-            "time": "2026-10-18T16:23:44+00:00"
+            "time": "2026-10-18T16:56:12+00:00"
         },
         {
             "name": "ajthinking/archetype",

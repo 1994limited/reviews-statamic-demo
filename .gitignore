@@ -39,3 +39,5 @@ Thumbs.db
 /content/cargo/carts
 /storage/inertia-devtools
 /database/database.sqlite
+/storage/reviews-sources.yaml
+/storage/framework/reviews-import

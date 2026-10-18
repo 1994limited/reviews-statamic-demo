@@ -11,11 +11,11 @@
     ],
     "require": {
         "php": "^8.3",
+        "1994/reviews-statamic": "^1.2",
+        "duncanmcclean/statamic-cargo": "^1.15",
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0",
         "statamic/cms": "^6.0",
-        "duncanmcclean/statamic-cargo": "^1.15",
-        "1994/reviews-statamic": "^1.1",
         "statamic/seo-pro": "^7.15"
     },
     "require-dev": {

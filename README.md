@@ -36,7 +36,7 @@ Then open http://localhost:8000.
 | `jo@example.com` | A reader who has bought two books. The sign-in page is filled in with it. |
 | `admin@example.com` | The Control Panel, at `/cp`. |
 
-`demo:seed` writes about 70 reviews and a few orders. Run it again with `--fresh` to start over.
+`demo:seed` writes about 70 reviews and a few orders. Run it again with `--fresh` to start over. Two of Coral Arithmetic's reviews are imported from Trustpilot, to show how a review from elsewhere looks, and there's a Feefo source under **Reviews → Sync**, switched off. To try importing, preview `scripts/sample-export.csv` (a Yotpo export) under **Reviews → Import**.
 
 Both only run with `APP_ENV=local`. Don't put this demo on a public server as it is: the sign-in page gives the password away.
 
