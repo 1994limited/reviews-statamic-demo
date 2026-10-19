@@ -69,16 +69,16 @@
         },
         {
             "name": "1994/reviews-statamic",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/1994limited/reviews-statamic.git",
-                "reference": "9ac0501f8578b0a26d3a1f8e5cbbfc1de4b579d0"
+                "reference": "47f9504491dc64eaa4f6c7e1ed5133279b2c0fb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/1994limited/reviews-statamic/zipball/9ac0501f8578b0a26d3a1f8e5cbbfc1de4b579d0",
-                "reference": "9ac0501f8578b0a26d3a1f8e5cbbfc1de4b579d0",
+                "url": "https://api.github.com/repos/1994limited/reviews-statamic/zipball/47f9504491dc64eaa4f6c7e1ed5133279b2c0fb5",
+                "reference": "47f9504491dc64eaa4f6c7e1ed5133279b2c0fb5",
                 "shasum": ""
             },
             "require": {
@@ -141,9 +141,9 @@
             "support": {
                 "email": "hello@1994.co.uk",
                 "issues": "https://github.com/1994limited/reviews-statamic/issues",
-                "source": "https://github.com/1994limited/reviews-statamic/tree/v1.2.1"
+                "source": "https://github.com/1994limited/reviews-statamic/tree/v1.2.2"
             },
-            "time": "2026-10-18T17:25:57+00:00"
+            "time": "2026-10-19T18:06:33+00:00"
         },
         {
             "name": "ajthinking/archetype",
